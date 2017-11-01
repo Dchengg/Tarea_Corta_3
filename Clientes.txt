@@ -38,8 +38,5 @@
 984546511,Make it stop
 688451657,PreordenI
 123469815,PORFIN >:v
-<<<<<<< HEAD
 123345678,WHAt
 :P,Diego
-=======
->>>>>>> parent of cf9a3e2... fucking ivannia
