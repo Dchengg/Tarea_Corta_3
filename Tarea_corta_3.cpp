@@ -65,8 +65,9 @@ public:
     void BorrarBalanceado(NodoBinario *r, bool, int eliminar);
     void InsertarBalanceado(NodoBinario *r, bool, int x);
     void insertarIndices();
-
-
+    void indexar();
+    void insertarCliente();
+    void limpiar();
 };
 
 class lista {
@@ -192,7 +193,7 @@ void Binario::insertarIndices(){
 void lista::Mostrar()
 {
    pnodo aux=primero;
-   while(aux->siguiente!=primero)
+   while(aux->siguiente!=NULL)
      {
 
       cout << aux->valor << "-> ";
@@ -257,6 +258,24 @@ void lista::CargarMemoria(int indice){
     cont++;
   }
 }
+void Binario::limpiar(){
+  raiz = NULL;
+}
+void Binario::insertarCliente(){
+  std::ofstream Archivo("Clientes.txt",fstream::app);
+  string cliente;
+  string nombre;
+  string cedula;
+  cout<<"Ingrese el nombre del cliente: ";
+  cin>>nombre;
+  cout<<endl<<"Ingrese el numero de cedula del cliente :";
+  cin>>cedula;
+  cout<<endl;
+  cliente = cedula+','+nombre;
+  Archivo<<cliente <<endl;
+  indexar();
+  cout<<"El cliente "<<cliente<<"ha sido agregado"<<endl;
+}
 
 void CrearIndices(){
   //Lee Clientes y copia el contenido en Indices
@@ -275,15 +294,34 @@ void CrearIndices(){
 
   }
 }
+void Binario::indexar(){
+  CrearIndices();
+  limpiar();
+  insertarIndices();
+  pNodoBinario aux = raiz;
+  InordenR(aux);
+}
 int main(){
   Binario Arbol;
   lista Mem;
+  int opcion;
   CrearIndices();
   Arbol.insertarIndices();
-  InordenR(Arbol.raiz);
-  cout<<endl;
-  Mem.CargarMemoria(35);
-  Mem.Mostrar();
+  cout<<"Bievenido"<<endl;
+  cout<<"Digite el numero de la accion que desea realizar :"<<endl;
+  cout<<"1.Indexar"<<endl;
+  cout<<"2.Agregar un cliente"<<endl;
+  cout<<"3.Eliminar un cliente"<<endl;
+  cin>>opcion;
+  if(opcion == 1){
+    Arbol.indexar();
+  }else if(opcion == 2){
+    Arbol.insertarCliente();
+  }else if(opcion == 3){
+
+  }else{
+    cout<<"Por favor digite una opcion valida"<<endl;
+  }
   cin.get();
   return 0;
 }
