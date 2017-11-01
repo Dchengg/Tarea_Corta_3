@@ -65,9 +65,14 @@ public:
     void BorrarBalanceado(NodoBinario *r, bool, int eliminar);
     void InsertarBalanceado(NodoBinario *r, bool, int x);
     void insertarIndices();
+<<<<<<< HEAD
     void indexar();
     void insertarCliente();
     void limpiar();
+=======
+
+
+>>>>>>> parent of cf9a3e2... fucking ivannia
 };
 
 class lista {
@@ -294,6 +299,7 @@ void CrearIndices(){
 
   }
 }
+<<<<<<< HEAD
 void Binario::indexar(){
   CrearIndices();
   limpiar();
@@ -301,12 +307,15 @@ void Binario::indexar(){
   pNodoBinario aux = raiz;
   InordenR(aux);
 }
+=======
+>>>>>>> parent of cf9a3e2... fucking ivannia
 int main(){
   Binario Arbol;
   lista Mem;
   int opcion;
   CrearIndices();
   Arbol.insertarIndices();
+<<<<<<< HEAD
   cout<<"Bievenido"<<endl;
   cout<<"Digite el numero de la accion que desea realizar :"<<endl;
   cout<<"1.Indexar"<<endl;
@@ -322,6 +331,12 @@ int main(){
   }else{
     cout<<"Por favor digite una opcion valida"<<endl;
   }
+=======
+  InordenR(Arbol.raiz);
+  cout<<endl;
+  Mem.CargarMemoria(35);
+  Mem.Mostrar();
+>>>>>>> parent of cf9a3e2... fucking ivannia
   cin.get();
   return 0;
 }
