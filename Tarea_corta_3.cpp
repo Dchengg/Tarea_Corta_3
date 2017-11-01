@@ -4,6 +4,33 @@
 #include <sstream>
 using namespace std;
 
+
+class nodo {
+   public:
+    nodo(string v)
+    {
+       valor = v;
+       siguiente = NULL;
+       anterior = NULL;
+    }
+
+nodo(string v, nodo * signodo)
+    {
+       valor = v;
+       siguiente = signodo;
+    }
+
+   private:
+    string valor;
+    nodo *siguiente;
+    nodo *anterior;
+
+
+   friend class lista;
+};
+
+typedef nodo *pnodo;
+
 class NodoBinario {
    public:
 
@@ -41,6 +68,34 @@ public:
 
 
 };
+
+class lista {
+public:
+	lista() { primero = actual = NULL; }
+	~lista();
+
+  bool ListaVacia() { return primero == NULL; }
+  void Mostrar();
+  void CargarMemoria(int indice);
+  void InsertarFinal(string v);
+
+
+protected:
+	pnodo primero;
+	pnodo actual;
+};
+
+lista::~lista()
+{
+	pnodo aux;
+	while (primero) {
+		aux = primero;
+		primero = primero->siguiente;
+		delete aux;
+	}
+	actual = NULL;
+}
+
 
 void NodoBinario::InsertaBinario(int num,string str)
 {
@@ -132,6 +187,48 @@ void Binario::insertarIndices(){
 
   }
 }
+void lista::Mostrar()
+{
+   pnodo aux=primero;
+   while(aux->siguiente!=primero)
+     {
+
+      cout << aux->valor << "-> ";
+      aux = aux->siguiente;
+     }
+     cout<<aux->valor<<"->";
+     cout<<endl;
+}
+void lista::InsertarFinal(string v)
+{
+	if (ListaVacia()){
+		primero = new nodo(v);
+  }
+	else
+	{
+		pnodo aux = primero;
+		while (aux->siguiente != NULL)
+			aux = aux->siguiente;
+		aux->siguiente = new nodo(v);
+	}
+}
+void lista::CargarMemoria(int indice){
+  int pos;
+  int times;
+  int cont = 0;
+  string cliente;
+  std::ifstream Clientes("Clientes.txt");
+  times = indice/20;
+  pos = indice%20;
+  while(times != cont){
+    for(int i = 0;i < 20;i++){
+      getline(Clientes,cliente);
+      InsertarFinal(cliente);
+    }
+    cont++;
+  }
+}
+
 void CrearIndices(){
   //Lee Clientes y copia el contenido en Indices
   std::ofstream borrar("Indices.txt");//Para borrar datos residuo
@@ -149,47 +246,15 @@ void CrearIndices(){
 
   }
 }
-/*void Binario::IngresarExpresion(string expresion){
-  //separa la expresion y la mete en un nodo que después se ingresa a la cola
-  string v = "";
-  int a = 0;|
-  bool f = false;
-  if (isdigit(expresion[0])){
-    while (isdigit(expresion[a])){
-      v = v+expresion[a];
-      a++;
-    }
-    expresion.erase(0,a-1);
-  }
-  else
-    v = expresion[0];
-  pnodo aux = new nodo(v);
-  insertar(aux);
-  for(std::string::size_type cont = 1; cont < expresion.length();cont++){
-    v = "";
-    if (isdigit(expresion[cont]) == false){
-      v = expresion[cont];
-    }
-    else{
-      while (isdigit(expresion[cont])){
-        v = v+expresion[cont];
-        cont++;
-        f = true;
-      }
-      if (f){
-        f = false;
-        cont--;
-      }
-    }
-    aux->siguiente = new nodo(v);
-    aux = aux->siguiente;
-  }
-}*/
 int main(){
   Binario Arbol;
+  lista Mem;
   CrearIndices();
   Arbol.insertarIndices();
   InordenR(Arbol.raiz);
+  cout<<endl;
+  Mem.CargarMemoria(35);
+  Mem.Mostrar();
   cin.get();
   return 0;
 }
