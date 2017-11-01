@@ -4,7 +4,6 @@
 #include <sstream>
 using namespace std;
 
-
 class nodo {
    public:
     nodo(string v)
@@ -274,7 +273,7 @@ void Binario::insertarCliente(){
   cliente = cedula+','+nombre;
   Archivo<<cliente <<endl;
   indexar();
-  cout<<"El cliente "<<cliente<<"ha sido agregado"<<endl;
+  cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
 }
 
 void CrearIndices(){
