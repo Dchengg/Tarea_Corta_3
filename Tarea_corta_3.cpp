@@ -2,7 +2,10 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 using namespace std;
+
+
 
 
 class nodo {
@@ -61,11 +64,11 @@ public:
 
     bool Hh;
 
-    void Borrar(NodoBinario *nodoB, bool);
-    void BorrarBalanceado(NodoBinario *r, bool, int eliminar);
+    void Borrar(NodoBinario* D);
+    void BorrarBalanceado(NodoBinario *r, int eliminar);
     void InsertarBalanceado(NodoBinario *r, bool, int x);
     void insertarIndices();
-
+    void EliminarCliente (int cedula);
 
 };
 
@@ -246,15 +249,108 @@ void CrearIndices(){
 
   }
 }
+
+/*void Binario::Borrar(NodoBinario* D){
+  NodoBinario *q;
+  if (D->Hder != NULL)
+    Borrar(D->Hder);
+  else{
+    q->valor = D->valor;
+    q = D;
+    D = D->Hizq;
+  }
+}
+
+void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
+  NodoBinario *q;
+  cout << "raiz:  " << raiz->valor << endl;
+  if (raiz != NULL){
+    if (x < raiz->valor){
+      cout << "entro" << endl;
+      BorrarBalanceado(raiz->Hizq, x);
+    }
+    else{
+      if (x > raiz->valor){
+        cout << "entro 2" << endl;
+        BorrarBalanceado(raiz->Hder, x);
+      }
+      else
+        q = raiz;
+    }
+    if (q->Hder == NULL){
+      cout << "entro 3" << endl;
+      raiz = q->Hizq;
+    }
+    else{
+      if (q->Hizq == NULL){
+        raiz = q->Hder;
+      }
+    }
+  }
+  else{
+    Borrar(q->Hizq);
+  }
+}*/
+
+void AgregarUno(string cedula){
+  cout << "HOLA" << endl;
+  string str, str2;
+  ifstream original ( "Clientes.txt" );
+  ofstream copia ( "Clientes2.txt" );
+  while (!original.eof()){
+    getline(original,str);
+    str2 = str;
+    if (getSegmento(str,1) == cedula)
+      str2 = str + ",1";
+    copia << str2 << endl;
+  }
+  original.close();
+  copia.close();
+  remove("Clientes.txt");
+  rename("Clientes2.txt","Clientes.txt");
+}
+
+void Binario::EliminarCliente (int cedula){
+  //if (BorrarBalanceado(raiz,cedula)){
+  cout << "QQQQ" << endl;
+  string cedulaString = to_string(cedula);
+  AgregarUno(cedulaString);
+  //}
+  //else{
+    //cout << "La cédula que digito no existe" << endl;
+  //}
+}
+
 int main(){
   Binario Arbol;
   lista Mem;
   CrearIndices();
   Arbol.insertarIndices();
+  cout << endl << "Inorden: " << endl << endl;
   InordenR(Arbol.raiz);
-  cout<<endl;
-  Mem.CargarMemoria(35);
-  Mem.Mostrar();
+  cout << endl << endl;
+  cout << endl << "Preorden: " << endl << endl;
+  PreordenR(Arbol.raiz);
+  cout << endl << endl;
+  cout << endl << "Postorden: " << endl << endl;
+  PostordenR(Arbol.raiz);
+  cout << endl << endl;
+  /*Arbol.BorrarBalanceado(Arbol.raiz, 78);
+  cout << endl << "Inorden: " << endl << endl;
+  InordenR(Arbol.raiz);
+  cout << endl << endl;
+  cout << endl << "Preorden: " << endl << endl;
+  PreordenR(Arbol.raiz);
+  cout << endl << endl;
+  cout << endl << "Postorden: " << endl << endl;
+  PostordenR(Arbol.raiz);
+  cout << endl << endl;*/
+  //Mem.CargarMemoria(35);
+  cout << "HOLAAAAAAAAAAAAAAAAAAAAAL" << endl;
+  //Mem.Mostrar();
+  cout << "HOLAAAAAA" << endl;
+  Arbol.EliminarCliente(78);
+
   cin.get();
   return 0;
 }
