@@ -78,6 +78,8 @@ public:
   void Mostrar();
   void CargarMemoria(int indice);
   void InsertarFinal(string v);
+  void BorrarInicio();
+  void limpiar();
 
 
 protected:
@@ -212,15 +214,42 @@ void lista::InsertarFinal(string v)
 		aux->siguiente = new nodo(v);
 	}
 }
+void lista::BorrarInicio()
+{
+	if (ListaVacia()) {
+		cout << "No hay elementos en la lista:" << endl;
+
+	}
+	else {
+		if (primero->siguiente == NULL) {
+			primero = NULL;
+		}
+		else {
+
+			pnodo aux = primero;
+			primero = primero->siguiente;
+			delete aux;
+		}
+	}
+}
+
+
+void lista::limpiar(){
+	while (!ListaVacia())
+	{
+		BorrarInicio();
+	}
+}
 void lista::CargarMemoria(int indice){
   int pos;
   int times;
-  int cont = 0;
+  int cont = -1;
   string cliente;
   std::ifstream Clientes("Clientes.txt");
-  times = indice/20;
+  times = indice/21;
   pos = indice%20;
   while(times != cont){
+    limpiar();
     for(int i = 0;i < 20;i++){
       getline(Clientes,cliente);
       InsertarFinal(cliente);
