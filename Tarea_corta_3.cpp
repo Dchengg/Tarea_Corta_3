@@ -1,19 +1,22 @@
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 class NodoBinario {
    public:
 
    int valor;
+   string str;
    int FB;
    NodoBinario *Hizq, *Hder, *siguiente, *anterior;
 
 
-    NodoBinario(int num, NodoBinario *der = NULL, NodoBinario *izq = NULL, NodoBinario *sig=NULL, NodoBinario *ant=NULL):
-        Hizq(izq), Hder(der), valor(num), siguiente(sig), anterior(ant), FB(0) {}
+    NodoBinario(int num, string cliente, NodoBinario *der = NULL, NodoBinario *izq = NULL, NodoBinario *sig=NULL, NodoBinario *ant=NULL):
+        Hizq(izq), Hder(der), valor(num),str(cliente),siguiente(sig), anterior(ant), FB(0) {}
 
-    void InsertaBinario(int num);
+    void InsertaBinario(int num,string cliente);
 };
 
 typedef NodoBinario *pNodoBinario;
@@ -24,7 +27,7 @@ public:
 
     Binario():raiz(NULL){}
 
-    void InsertaNodo(int num);
+    void InsertaNodo(int num, string str);
     void PreordenI();
     void InordenI();
     void PostordenI();
@@ -33,99 +36,38 @@ public:
 
     void Borrar(NodoBinario *nodoB, bool);
     void BorrarBalanceado(NodoBinario *r, bool, int eliminar);
-    void Equilibrar1(NodoBinario *n, bool);
-    void Equilibrar2(NodoBinario *n, bool);
     void InsertarBalanceado(NodoBinario *r, bool, int x);
-    void RotacionDobleIzquierda(NodoBinario *n1, NodoBinario *n2);
-    void RotacionDobleDerecha(NodoBinario *n1, NodoBinario *n2);
-    void RotacionSimpleIzquierda(NodoBinario *n1, NodoBinario *n2);
-    void RotacionSimpleDerecha(NodoBinario *n1, NodoBinario *n2);
+    void insertarIndices();
 
 
 };
 
-void NodoBinario::InsertaBinario(int num)
+void NodoBinario::InsertaBinario(int num,string str)
 {
     if(num<valor){
         if(Hizq==NULL){
-            Hizq = new NodoBinario(num);
+            Hizq = new NodoBinario(num,str);
         }else{
-            Hizq->InsertaBinario(num);
+            Hizq->InsertaBinario(num,str);
         }
     }else{
         if(Hder==NULL){
-            Hder = new NodoBinario(num);
+            Hder = new NodoBinario(num,str);
         }else{
-            Hder->InsertaBinario(num);
+            Hder->InsertaBinario(num,str);
         }
     }
 }
 
-void Binario::InsertaNodo(int num)
+void Binario::InsertaNodo(int num,string str)
 {
     if(raiz==NULL){
-        raiz = new NodoBinario(num);
+        raiz = new NodoBinario(num,str);
     }else{
-        raiz->InsertaBinario(num);
-    }
-}
-/*
-void Binario::PreordenI(){
-    NodoBinario *Act = raiz;
-    Pila p;
-    while(p.Vacia()==false || (Act!=NULL)){
-        if(Act!=NULL){
-            cout<<Act->valor<<" - ";
-            p.Push(Act);
-            Act = Act->Hizq;
-        }else{
-            Act=p.Pop();
-            Act=Act->Hder;
-        }
+        raiz->InsertaBinario(num,str);
     }
 }
 
-void Binario::InordenI(){
-    NodoBinario *Act = raiz;
-    Pila p;
-    bool band=true;
-    while(band){
-
-        while(Act!=NULL){
-            p.Push(Act);
-            Act = Act->Hizq;
-        }
-        if(!p.Vacia()){
-            Act=p.Pop();
-            cout<<Act->valor<<" - ";
-            Act=Act->Hder;
-        }
-        if(p.Vacia() & Act==NULL){
-            break;
-        }
-    }
-}
-
-void Binario::PostordenI(){
-    NodoBinario *Act = raiz;
-    Pila p;
-    Pila p2;
-    while(!p.Vacia() || Act!=NULL){
-        if(Act!=NULL){
-            p2.Push(new NodoBinario(Act->valor));
-            p.Push(Act);
-            Act = Act->Hder;
-        }else{
-            Act=p.Pop();
-            Act = Act->Hizq;
-        }
-    }
-    while(!p2.Vacia()){
-        NodoBinario *salida=p2.Pop();
-        cout<<salida->valor<<" - ";
-    }
-}
-*/
 void PreordenR(NodoBinario *R){
 
     if(R==NULL){
@@ -143,7 +85,7 @@ void InordenR(NodoBinario *R){
         return;
     }else{
         InordenR(R->Hizq);
-        cout<<R->valor<<" - ";
+        cout<<R->valor<<","<<R->str<<" - ";
         InordenR(R->Hder);
     }
 }
@@ -159,222 +101,95 @@ void PostordenR(NodoBinario *R){
     }
 }
 
-void Binario::Borrar(NodoBinario* D, bool Hh)
-{
-    NodoBinario *q;
-    if(D->Hder !=NULL){
-        Borrar(D->Hder, Hh);
-        if(Hh){
-            Equilibrar2(D, Hh);
-        }else{
-            q->valor=D->valor;
-            q=D;
-            D=D->Hizq;
-            Hh = true;
-        }
+string getSegmento(string str, int pos){
+  string segmento;
+  int cont = 1;
+  stringstream stream(str);
+  string resultado;
+  while (getline(stream, segmento, ','))
+  {
+    if (cont == pos){
+      resultado = segmento;
     }
+    cont++;
+  }
+  return resultado;
 }
 
-void Binario::BorrarBalanceado(NodoBinario* raiz, bool Hh, int x)
-{
-    NodoBinario *q;
-    if(raiz!=NULL){
-        if(x<raiz->valor){
-            BorrarBalanceado(raiz->Hizq, Hh, x);
-            if(Hh){
-                Equilibrar1(raiz, Hh);
-            }
-        }else{
-            if(x>raiz->valor){
-                BorrarBalanceado(raiz->Hder, Hh, x);
-                if(Hh){
-                    Equilibrar2(raiz, Hh);
-                }
-            }else{
-                q=raiz;
-            }
-        }
 
-                if(q->Hder==NULL){
-                    raiz=q->Hizq;
-                    Hh=true;
-                }else{
-                    if(q->Hizq==NULL){
-                        raiz=q->Hder;
-                        Hh = true;
-                    }else{
-                        Borrar(q->Hizq, Hh);
-                    }
-                    if(Hh){
-                        Equilibrar1(raiz, Hh);
-                    }
-                }
-            }
+void Binario::insertarIndices(){
+  std::ifstream Archivo("Indices.txt");
+  string str;
+  string segmento;
+  int llave;
+
+  while (std::getline(Archivo, segmento))
+  {
+    cout<<segmento<<endl;
+    llave = stoi(getSegmento(segmento,2));
+    str = getSegmento(segmento,1);
+    InsertaNodo(llave,str);
+
+  }
 }
+void CrearIndices(){
+  //Lee Clientes y copia el contenido en Indices
+  std::ofstream borrar("Indices.txt");//Para borrar datos residuo
+  std::ofstream arch1("Indices.txt",fstream::app);
+  string archivo = "Clientes.txt";
+  string expresion;
+  int cont = 0;
+  std::ifstream Archivo(archivo);
+	std::string str;
+  while (std::getline(Archivo, str)) {
+    expresion = str;
+    cont++;
+    expresion = to_string(cont)+","+expresion;
+    arch1 << expresion << std::endl;
 
-void Binario::Equilibrar1(NodoBinario* n, bool Hh){
-    NodoBinario *n1;
-    switch (n->FB){
-        case -1: n->FB = 0;
-        break;
-        case 0: n->FB = 1;
-        Hh = false;
-        break;
-        case 1: n1 = n->Hder;
-        if(n1->FB>=0){
-            if(n1->FB=0){
-                Hh = false;
-                RotacionSimpleDerecha(n, n1);
-            }else{
-                RotacionDobleDerecha(n, n1);
-            }
-        }
-    }
+  }
 }
-
-void Binario::Equilibrar2(NodoBinario* n, bool Hh){
-    NodoBinario *n1;
-    switch (n->FB){
-        case 1: n->FB = 0;
-        break;
-        case 0: n->FB = 1;
-        Hh = false;
-        break;
-        case -1: n1 = n->Hizq;
-        if(n1->FB<=0){
-            if(n1->FB=0){
-                Hh = false;
-                RotacionSimpleIzquierda(n, n1);
-            }else{
-                RotacionDobleIzquierda(n, n1);
-            }
-        }
+/*void Binario::IngresarExpresion(string expresion){
+  //separa la expresion y la mete en un nodo que después se ingresa a la cola
+  string v = "";
+  int a = 0;|
+  bool f = false;
+  if (isdigit(expresion[0])){
+    while (isdigit(expresion[a])){
+      v = v+expresion[a];
+      a++;
     }
-}
-
-void Binario::InsertarBalanceado(pNodoBinario ra, bool Hh, int x){
-    pNodoBinario n1;
-
-    if(raiz==NULL){
-        ra=new NodoBinario(x);
-        cout<<ra->valor<<"q as"<<endl;
-        Hh = true;
-    }else{
-        cout<<"q as2"<<endl;
-        if(x<ra->valor){
-            InsertarBalanceado(ra->Hizq, Hh, x);
-
-        if(Hh){
-            switch(ra->valor){
-                case 1: ra->FB=0;
-                Hh = false;
-                break;
-                case 0: ra->FB  = -1;
-                break;
-                case -1: n1=ra->Hizq;
-                if(n1->FB =-1){
-                    RotacionSimpleIzquierda(ra, n1);
-                }else{
-                    RotacionDobleIzquierda(ra,n1);
-                }
-                Hh = false;
-                break;
-            }
-        }
-        }else{
-            if(x>ra->valor){
-                InsertarBalanceado(ra->Hder, Hh, x);
-
-                if(Hh){
-                    switch(ra->FB){
-                        case -1: ra->FB=0;
-                        Hh = false;
-                        break;
-                        case 0: ra->FB=1;
-                        break;
-                        case 1:n1=ra->Hder;
-                        if(n1->FB=1){
-                            RotacionSimpleDerecha(ra, n1);
-                        }else{
-                            RotacionDobleDerecha(ra, n1);
-                        }
-                        Hh=false;
-                        break;
-                    }
-                }
-            }
-        }
+    expresion.erase(0,a-1);
+  }
+  else
+    v = expresion[0];
+  pnodo aux = new nodo(v);
+  insertar(aux);
+  for(std::string::size_type cont = 1; cont < expresion.length();cont++){
+    v = "";
+    if (isdigit(expresion[cont]) == false){
+      v = expresion[cont];
     }
-}
-
-void Binario::RotacionDobleIzquierda(NodoBinario* n, NodoBinario* n1){
-    NodoBinario *n2;
-    n2=n1->Hder;
-    n->Hizq = n2->Hder;
-    n2->Hder=n;
-    n1->Hder=n2->Hizq;
-    n2->Hizq=n1;
-
-    if(n2->FB==1){
-        n1->FB=-1;
-    }else{
-        n1->FB=0;
+    else{
+      while (isdigit(expresion[cont])){
+        v = v+expresion[cont];
+        cont++;
+        f = true;
+      }
+      if (f){
+        f = false;
+        cont--;
+      }
     }
-    if(n2->FB==-1){
-        n->FB=1;
-    }else{
-        n->FB=0;
-    }
-    n2->FB=0;
-    n=n2;
-}
-
-void Binario::RotacionDobleDerecha(NodoBinario* n, NodoBinario* n1){
-    NodoBinario *n2;
-    n2=n1->Hizq;
-    n->Hder = n2->Hizq;
-    n2->Hizq=n;
-    n1->Hizq=n2->Hder;
-    n2->Hder=n1;
-
-    if(n2->FB==1){
-        n->FB=-1;
-    }else{
-        n->FB=0;
-    }
-    if(n2->FB==-1){
-        n1->FB=1;
-    }else{
-        n1->FB=0;
-    }
-    n2->FB=0;
-    n=n2;
-}
-
-void Binario::RotacionSimpleDerecha(NodoBinario* n, NodoBinario* n1){
-    n->Hder=n1->Hizq;
-    n1->Hizq=n;
-
-    if(n1->FB==1){
-        n->FB=0;
-        n1->FB=0;
-    }else{
-        n->FB=1;
-        n1->FB=-1;
-    }
-    n=n1;
-}
-
-void Binario::RotacionSimpleIzquierda(NodoBinario* n, NodoBinario* n1){
-    n->Hizq=n1->Hder;
-    n1->Hder=n;
-
-    if(n1->FB==-1){
-        n->FB=0;
-        n1->FB=0;
-    }else{
-        n->FB=-1;
-        n1->FB=-1;
-    }
-    n=n1;
+    aux->siguiente = new nodo(v);
+    aux = aux->siguiente;
+  }
+}*/
+int main(){
+  Binario Arbol;
+  CrearIndices();
+  Arbol.insertarIndices();
+  InordenR(Arbol.raiz);
+  cin.get();
+  return 0;
 }
