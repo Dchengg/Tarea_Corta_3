@@ -67,7 +67,7 @@ public:
     void insertarCliente();
     void limpiar();
     void EliminarCliente (int cedula);
-    string Buscar(NodoBinario *raiz, int x);
+    int Buscar(NodoBinario *raiz, int x);
 
 };
 
@@ -387,8 +387,8 @@ void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
     Borrar(q->Hizq);
   }
 }
-string Binario::Buscar(NodoBinario *raiz, int x){
-  string indice;
+int Binario::Buscar(NodoBinario *raiz, int x){
+  int indice;
   cout << "cedula:  " << raiz->valor << endl;
   if (raiz != NULL){
     if (x < raiz->valor){
@@ -401,7 +401,7 @@ string Binario::Buscar(NodoBinario *raiz, int x){
       else{
         cout<<"Encontrado en arbol!!!"<<endl;
         cout<<raiz->str<<endl;
-        indice = raiz->str;
+        indice = stoi(raiz->str);
         return indice;
       }
     }
@@ -507,9 +507,7 @@ int main(){
       cout<<"Introduzca el numero de cedula del cliente: ";
       cin >> indice;
       cout<<endl;
-      prueba = Arbol.Buscar(Arbol.raiz,indice);
-      cout<<prueba<<endl;
-      v = stoi(Arbol.Buscar(Arbol.raiz,indice));
+      v = Arbol.Buscar(Arbol.raiz,indice);
       cout<<v<<endl;
       cliente = Mem.BuscarMemoria(v,"Busqueda");
       if(cliente == "No Encontrado"){
