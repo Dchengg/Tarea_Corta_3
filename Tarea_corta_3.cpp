@@ -242,6 +242,9 @@ void lista::limpiar(){
 
 void lista::CargarMemoriaInsertar(int indice){
   Inicio = indice-19;
+  if(Inicio <=0){
+    Inicio = 1;
+  }
   Final = indice;
   int cont = 1;
   string cliente;
@@ -312,8 +315,7 @@ int Binario::insertarCliente(){
   string cliente;
   string nombre;
   string cedula;
-  int c;
-  int indice;
+  int v;
   cout<<"Ingrese el nombre del cliente: ";
   cin>>nombre;
   cout<<endl<<"Ingrese el numero de cedula del cliente :";
@@ -321,11 +323,9 @@ int Binario::insertarCliente(){
   cout<<endl;
   cliente = cedula+','+nombre;
   Archivo<<endl<<cliente;
-  indexar();
   cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
-  c = stoi(cedula);
-  indice = Buscar(raiz,c);
-  return indice;
+  v = stoi(cedula);
+  return v;
 }
 
 void CrearIndices(){
@@ -497,9 +497,13 @@ int main(){
     if(opcion == 1)
       Arbol.indexar();
     else if(opcion == 2){
+      int cedula;
       int indice;
-      indice = Arbol.insertarCliente();
+      cedula = Arbol.insertarCliente();
+      Arbol.indexar();
+      indice = Arbol.Buscar(Arbol.raiz,cedula);
       cout<<indice<<endl;
+      Mem.CargarMemoriaInsertar(indice);
     }else if(opcion == 3){
       int clienteAEliminar;
       cout << endl << "Digite la cedula del cliente que desea eliminar: ";

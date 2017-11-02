@@ -3,6 +3,5 @@
 4,jose
 13,lol
 9,beast
-54,Diego
-91,Final
-65,cloud
+20,pedro
+7,bruh
