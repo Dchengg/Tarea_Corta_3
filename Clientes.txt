@@ -1,8 +1,5 @@
-12,Carlos,1
-45,Boi,1
 4,jose
 13,lol
 9,beast
 20,pedro
-7,bruh
 1111111,Luis

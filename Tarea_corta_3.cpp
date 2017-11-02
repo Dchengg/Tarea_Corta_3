@@ -279,7 +279,6 @@ void lista::CargarMemoriaBusqueda(int indice){
       break;
     }
     if(Inicio <= cont){
-      cout<<Inicio<<" == "<<cont<<endl;
       cliente = cliente.substr(cliente.find(",")+1);
       cout<<cliente<<endl;
       InsertarFinal(cliente);
@@ -396,22 +395,18 @@ void Binario::Borrar(NodoBinario* D){
 
 void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
   NodoBinario *q;
-  cout << "raiz:  " << raiz->valor << endl;
   if (raiz != NULL){
     if (x < raiz->valor){
-      cout << "entro" << endl;
       BorrarBalanceado(raiz->Hizq, x);
     }
     else{
       if (x > raiz->valor){
-        cout << "entro 2" << endl;
         BorrarBalanceado(raiz->Hder, x);
       }
       else
         q = raiz;
     }
     if (q->Hder == NULL){
-      cout << "entro 3" << endl;
       raiz = q->Hizq;
     }
     else{
@@ -509,6 +504,18 @@ void Purgar(){
   Archivo.close();
   remove("Clientes.txt");
   rename("Clientes2.txt","Clientes.txt");
+  ifstream original2 ( "Clientes.txt" );
+  ofstream copia2 ( "Clientes2.txt" );
+  string linea;
+  while ( getline( original2, linea ) ) {
+    if ( ! linea.empty() ) {
+        copia2 << linea << '\n';
+    }
+  }
+  original2.close();
+  copia2.close();
+  remove("Clientes.txt");
+  rename("Clientes2.txt","Clientes.txt");
 }
 
 int main(){
@@ -525,10 +532,10 @@ int main(){
     cout << "    1. Indexar" << endl;
     cout << "    2. Agregar un cliente" << endl;
     cout << "    3. Eliminar un cliente" << endl;
-    cout << "    4. Busqueda" <<endl;
-    cout << "    99. Mostrar recorridos" << endl;
-    cout << "    100. Salir" << endl;
-    cout << "    101. Por favor funciona" << endl;
+    cout << "    4. Purgar" << endl;1||
+    cout << "    5. Busqueda de un cliente" <<endl;
+    cout << "    6. Mostrar recorridos" << endl;
+    cout << "    0. Salir" << endl;
     cin >> opcion;
     if(opcion == 1)
       Arbol.indexar();
@@ -542,16 +549,7 @@ int main(){
         cout<<indice<<endl;
         Mem.CargarMemoriaInsertar(indice);
       }
-    }else if(opcion == 3){
-      int clienteAEliminar;
-      string cliente;
-      cout << endl << "Digite la cedula del cliente que desea eliminar: ";
-      cin >> clienteAEliminar;
-      cliente = Arbol.EliminarCliente(clienteAEliminar);
-      Arbol.indexar();
-      Mem.BorrarMemoria(cliente);
-      Mem.Mostrar();
-    }else if(opcion == 4){
+    }else if(opcion == 5){  
       int indice;
       int v;
       string prueba;
@@ -568,7 +566,18 @@ int main(){
       }else{
         cout<<"El cliente no esta en los archivos"<<endl;
       }
-    }else if(opcion == 99){
+    }else if(opcion == 4){
+        Purgar();
+    }else if(opcion == 3){
+      int clienteAEliminar;
+      string cliente;
+      cout << endl << "Digite la cedula del cliente que desea eliminar: ";
+      cin >> clienteAEliminar;
+      cliente = Arbol.EliminarCliente(clienteAEliminar);
+      Arbol.indexar();
+      Mem.BorrarMemoria(cliente);
+      Mem.Mostrar();
+    }else if(opcion == 6){
       cout << "Inorden: " << endl;
       InordenR(Arbol.raiz);
       cout << endl << endl << "Preorden: " << endl;
@@ -576,10 +585,8 @@ int main(){
       cout << endl << endl << "Postorden: " << endl;
       PostordenR(Arbol.raiz);
     }
-    else if(opcion == 100)
+    else if(opcion == 0)
       seguirTrabajando = false;
-    else if(opcion == 101)
-      Purgar();
     else
       cout<<"Por favor digite una opcion valida"<<endl;
   }

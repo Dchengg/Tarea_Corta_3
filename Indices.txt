@@ -2,5 +2,4 @@
 2,13,lol
 3,9,beast
 4,20,pedro
-5,7,bruh
-6,1111111,Luis
+5,1111111,Luis
