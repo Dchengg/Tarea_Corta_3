@@ -1,5 +1,2 @@
-1,4,jose
-2,13,lol
-3,9,beast
-4,20,pedro
-5,1111111,Luis
+1,21,boi
+2,12,varas

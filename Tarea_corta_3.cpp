@@ -315,13 +315,20 @@ void lista::BorrarMemoria(string cliente){
   pnodo aux = primero;
   while(aux != NULL){
     if(cliente == aux->valor){
-      pnodo temp = primero;
-      while(temp->siguiente != aux){
-        temp = temp->siguiente;
+      if(primero->siguiente == NULL){
+        primero = NULL;
+      }else if(aux == primero){
+        primero = primero->siguiente;
+        delete aux;
+      }else{
+        pnodo temp = primero;
+        while(temp->siguiente != aux){
+          temp = temp->siguiente;
+        } 
+        temp->siguiente = aux->siguiente;
+        aux->siguiente = NULL;
+        delete aux;
       }
-      temp->siguiente = aux->siguiente;
-      aux->siguiente = NULL;
-      delete aux;
     }
     aux = aux->siguiente;
   }
@@ -460,10 +467,16 @@ string AgregarUno(string cedula){
   rename("Clientes2.txt","Clientes.txt");
   ifstream original2 ( "Clientes.txt" );
   ofstream copia2 ( "Clientes2.txt" );
+  bool Primeral = true;
   string linea;
   while ( getline( original2, linea ) ) {
     if ( ! linea.empty() ) {
-        copia2 << linea << '\n';
+      if(Primeral == false){
+        copia2 <<endl<< linea;
+      }else{
+        copia2<<linea;
+        Primeral = false;
+      }
     }
   }
   original2.close();
@@ -506,10 +519,16 @@ void Purgar(){
   rename("Clientes2.txt","Clientes.txt");
   ifstream original2 ( "Clientes.txt" );
   ofstream copia2 ( "Clientes2.txt" );
+  bool Primeral = true;
   string linea;
   while ( getline( original2, linea ) ) {
     if ( ! linea.empty() ) {
-        copia2 << linea << '\n';
+      if(Primeral == false){
+        copia2 <<endl<< linea;
+      }else{
+        copia2<<linea;
+        Primeral = false;
+      }
     }
   }
   original2.close();
@@ -532,7 +551,7 @@ int main(){
     cout << "    1. Indexar" << endl;
     cout << "    2. Agregar un cliente" << endl;
     cout << "    3. Eliminar un cliente" << endl;
-    cout << "    4. Purgar" << endl;1||
+    cout << "    4. Purgar" << endl;
     cout << "    5. Busqueda de un cliente" <<endl;
     cout << "    6. Mostrar recorridos" << endl;
     cout << "    0. Salir" << endl;
@@ -574,7 +593,9 @@ int main(){
       cout << endl << "Digite la cedula del cliente que desea eliminar: ";
       cin >> clienteAEliminar;
       cliente = Arbol.EliminarCliente(clienteAEliminar);
+      cout<<cliente<<endl;
       Arbol.indexar();
+      PreordenR(Arbol.raiz);
       Mem.BorrarMemoria(cliente);
       Mem.Mostrar();
     }else if(opcion == 6){

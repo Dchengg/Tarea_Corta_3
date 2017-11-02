@@ -1,5 +1,4 @@
-4,jose
-13,lol
-9,beast
-20,pedro
-1111111,Luis
+4,Diego,1
+21,boi
+12,varas
+45,amigos,1
