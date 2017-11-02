@@ -60,9 +60,8 @@ public:
 
     bool Hh;
 
-    void Borrar(NodoBinario *nodoB, bool);
-    void BorrarBalanceado(NodoBinario *r, bool, int eliminar);
-    void InsertarBalanceado(NodoBinario *r, bool, int x);
+    void Borrar(NodoBinario *nodoB);
+    void BorrarBalanceado(NodoBinario *r, int eliminar);
     void insertarIndices();
     void indexar();
     void insertarCliente();
@@ -77,7 +76,8 @@ public:
 
   bool ListaVacia() { return primero == NULL; }
   void Mostrar();
-  void CargarMemoria(int indice);
+  void CargarMemoriaBusqueda(int indice);
+  void CargarMemoriaInsertar(int indice);
   void InsertarFinal(string v);
   void BorrarInicio();
   void limpiar();
@@ -236,22 +236,48 @@ void lista::limpiar(){
 	}
 }
 
-void lista::CargarMemoria(int indice){
-  int pos;
-  int times;
-  int cont = -1;
+void lista::CargarMemoriaInsertar(int indice){
+  int inicio;
+  int Final;
+  int cont = 1;
   string cliente;
   std::ifstream Clientes("Clientes.txt");
-  times = indice/21;
-  pos = indice%20;
-  while(times != cont){
-    limpiar();
-    for(int i = 0;i < 20;i++){
-      getline(Clientes,cliente);
-      InsertarFinal(cliente);
+  inicio = indice-19;
+  Final = indice;
+  limpiar();
+  while(Final >= cont){
+    getline(Clientes,cliente);
+    if(cliente == ""){
+      break;
     }
-    cont++;
-  }
+    if(inicio <= cont){
+      cout<<inicio<<" == "<<cont<<endl;    
+      InsertarFinal(cliente);
+      }
+      cont++;
+    }
+}
+
+void lista::CargarMemoriaBusqueda(int indice){
+  int inicio;
+  int Final;
+  int cont = 1;
+  string cliente;
+  std::ifstream Clientes("Clientes.txt");
+  inicio = indice;
+  Final = indice+20;
+  limpiar();
+  while(Final != cont){
+    getline(Clientes,cliente);
+    if(cliente == ""){
+      break;
+    }
+    if(inicio <= cont){
+      cout<<inicio<<" == "<<cont<<endl;    
+      InsertarFinal(cliente);
+      }
+      cont++;
+    }
 }
 
 void Binario::limpiar(){
@@ -299,7 +325,7 @@ void Binario::indexar(){
   insertarIndices();
 }
 
-/*void Binario::Borrar(NodoBinario* D){
+void Binario::Borrar(NodoBinario* D){
   NodoBinario *q;
   if (D->Hder != NULL)
     Borrar(D->Hder);
@@ -339,7 +365,7 @@ void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
   else{
     Borrar(q->Hizq);
   }
-}*/
+}
 
 
 void AgregarUno(string cedula){
@@ -394,6 +420,7 @@ int main(){
     cout << "    1. Indexar" << endl;
     cout << "    2. Agregar un cliente" << endl;
     cout << "    3. Eliminar un cliente" << endl;
+    cout << "    4. CargarMemoriaBusqueda" <<endl;
     cout << "    99. Mostrar recorridos" << endl;
     cout << "    100. Salir" << endl;
     cin >> opcion;
@@ -407,8 +434,12 @@ int main(){
       cin >> clienteAEliminar;
       Arbol.EliminarCliente(clienteAEliminar);
       Arbol.indexar();
-    }
-    else if(opcion == 99){
+    }else if(opcion == 4){
+      int indice;
+      cin >> indice;
+      Mem.CargarMemoriaInsertar(indice);
+      Mem.Mostrar();
+    }else if(opcion == 99){
       cout << "Inorden: " << endl;
       InordenR(Arbol.raiz);
       cout << endl << endl << "Preorden: " << endl;
