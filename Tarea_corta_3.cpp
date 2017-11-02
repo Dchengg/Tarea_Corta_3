@@ -250,15 +250,16 @@ void lista::CargarMemoriaInsertar(int indice){
   Final = indice;
   int cont = 1;
   string cliente;
-  std::ifstream Clientes("Clientes.txt");
+  std::ifstream Indices("Indices.txt");
   limpiar();
   while(Final >= cont){
-    getline(Clientes,cliente);
+    getline(Indices,cliente);
     if(cliente == ""){
       break;
     }
     if(Inicio <= cont){
       cout<<Inicio<<" == "<<cont<<endl;
+      cliente = cliente.substr(cliente.find(",")+1);
       InsertarFinal(cliente);
       }
       cont++;
@@ -270,15 +271,17 @@ void lista::CargarMemoriaBusqueda(int indice){
   Final = indice+20;
   int cont = 1;
   string cliente;
-  std::ifstream Clientes("Clientes.txt");
+  std::ifstream Indices("Indices.txt");
   limpiar();
   while(Final != cont){
-    getline(Clientes,cliente);
+    getline(Indices,cliente);
     if(cliente == ""){
       break;
     }
     if(Inicio <= cont){
       cout<<Inicio<<" == "<<cont<<endl;
+      cliente = cliente.substr(cliente.find(",")+1);
+      cout<<cliente<<endl;
       InsertarFinal(cliente);
       }
       cont++;
