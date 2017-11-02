@@ -64,7 +64,7 @@ public:
     void BorrarBalanceado(NodoBinario *r, int eliminar);
     void insertarIndices();
     void indexar();
-    void insertarCliente();
+    int insertarCliente();
     void limpiar();
     void EliminarCliente (int cedula);
     int Buscar(NodoBinario *raiz, int x);
@@ -253,7 +253,7 @@ void lista::CargarMemoriaInsertar(int indice){
       break;
     }
     if(Inicio <= cont){
-      cout<<Inicio<<" == "<<cont<<endl;    
+      cout<<Inicio<<" == "<<cont<<endl;
       InsertarFinal(cliente);
       }
       cont++;
@@ -273,7 +273,7 @@ void lista::CargarMemoriaBusqueda(int indice){
       break;
     }
     if(Inicio <= cont){
-      cout<<Inicio<<" == "<<cont<<endl;    
+      cout<<Inicio<<" == "<<cont<<endl;
       InsertarFinal(cliente);
       }
       cont++;
@@ -287,9 +287,11 @@ string lista::BuscarMemoria(int indice,string type){
   if(Inicio <= indice && Final >= indice){
     while(cont != indice){
       aux = aux->siguiente;
+      cont++;
     }
     cliente = aux->valor;
     return cliente;
+
   }
   if(type == "Busqueda"){
     CargarMemoriaBusqueda(indice);
@@ -305,20 +307,25 @@ void Binario::limpiar(){
   raiz = NULL;
 }
 
-void Binario::insertarCliente(){
+int Binario::insertarCliente(){
   std::ofstream Archivo("Clientes.txt",fstream::app);
   string cliente;
   string nombre;
   string cedula;
+  int c;
+  int indice;
   cout<<"Ingrese el nombre del cliente: ";
   cin>>nombre;
   cout<<endl<<"Ingrese el numero de cedula del cliente :";
   cin>>cedula;
   cout<<endl;
   cliente = cedula+','+nombre;
-  Archivo<<cliente <<endl;
+  Archivo<<endl<<cliente;
   indexar();
   cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
+  c = stoi(cedula);
+  indice = Buscar(raiz,c);
+  return indice;
 }
 
 void CrearIndices(){
@@ -341,8 +348,8 @@ void CrearIndices(){
 }
 
 void Binario::indexar(){
-  CrearIndices();
   limpiar();
+  CrearIndices();
   insertarIndices();
 }
 
@@ -389,7 +396,6 @@ void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
 }
 int Binario::Buscar(NodoBinario *raiz, int x){
   int indice;
-  cout << "cedula:  " << raiz->valor << endl;
   if (raiz != NULL){
     if (x < raiz->valor){
       Buscar(raiz->Hizq, x);
@@ -400,14 +406,13 @@ int Binario::Buscar(NodoBinario *raiz, int x){
       }
       else{
         cout<<"Encontrado en arbol!!!"<<endl;
-        cout<<raiz->str<<endl;
         indice = stoi(raiz->str);
         return indice;
       }
     }
   }
   else{
-    cout<<"el arbol esta vacio"<<endl;
+    return 0;
   }
 }
 
@@ -491,9 +496,11 @@ int main(){
     cin >> opcion;
     if(opcion == 1)
       Arbol.indexar();
-    else if(opcion == 2)
-      Arbol.insertarCliente();
-    else if(opcion == 3){
+    else if(opcion == 2){
+      int indice;
+      indice = Arbol.insertarCliente();
+      cout<<indice<<endl;
+    }else if(opcion == 3){
       int clienteAEliminar;
       cout << endl << "Digite la cedula del cliente que desea eliminar: ";
       cin >> clienteAEliminar;
@@ -509,12 +516,12 @@ int main(){
       cout<<endl;
       v = Arbol.Buscar(Arbol.raiz,indice);
       cout<<v<<endl;
-      cliente = Mem.BuscarMemoria(v,"Busqueda");
-      if(cliente == "No Encontrado"){
-        cout<<"El cliente no esta en los archivos"<<endl;
-      }else{
+      if(v != 0){
+        cliente = Mem.BuscarMemoria(v,"Busqueda");
         cout<<"Se ha encontrado el cliente"<<endl;
         cout<<"El cliente es : "<<cliente<<endl;
+      }else{
+        cout<<"El cliente no esta en los archivos"<<endl;
       }
     }else if(opcion == 99){
       cout << "Inorden: " << endl;
