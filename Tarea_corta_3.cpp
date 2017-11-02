@@ -67,6 +67,8 @@ public:
     void insertarCliente();
     void limpiar();
     void EliminarCliente (int cedula);
+    string Buscar(NodoBinario *raiz, int x);
+
 };
 
 class lista {
@@ -76,6 +78,7 @@ public:
 
   bool ListaVacia() { return primero == NULL; }
   void Mostrar();
+  string BuscarMemoria(int indice,string type);
   void CargarMemoriaBusqueda(int indice);
   void CargarMemoriaInsertar(int indice);
   void InsertarFinal(string v);
@@ -86,6 +89,8 @@ public:
 protected:
 	pnodo primero;
 	pnodo actual;
+  int Inicio;
+  int Final;
 };
 
 lista::~lista()
@@ -228,7 +233,6 @@ void lista::BorrarInicio(){
 		}
 	}
 }
-
 void lista::limpiar(){
 	while (!ListaVacia())
 	{
@@ -237,21 +241,19 @@ void lista::limpiar(){
 }
 
 void lista::CargarMemoriaInsertar(int indice){
-  int inicio;
-  int Final;
+  Inicio = indice-19;
+  Final = indice;
   int cont = 1;
   string cliente;
   std::ifstream Clientes("Clientes.txt");
-  inicio = indice-19;
-  Final = indice;
   limpiar();
   while(Final >= cont){
     getline(Clientes,cliente);
     if(cliente == ""){
       break;
     }
-    if(inicio <= cont){
-      cout<<inicio<<" == "<<cont<<endl;    
+    if(Inicio <= cont){
+      cout<<Inicio<<" == "<<cont<<endl;    
       InsertarFinal(cliente);
       }
       cont++;
@@ -259,27 +261,46 @@ void lista::CargarMemoriaInsertar(int indice){
 }
 
 void lista::CargarMemoriaBusqueda(int indice){
-  int inicio;
-  int Final;
+  Inicio = indice;
+  Final = indice+20;
   int cont = 1;
   string cliente;
   std::ifstream Clientes("Clientes.txt");
-  inicio = indice;
-  Final = indice+20;
   limpiar();
   while(Final != cont){
     getline(Clientes,cliente);
     if(cliente == ""){
       break;
     }
-    if(inicio <= cont){
-      cout<<inicio<<" == "<<cont<<endl;    
+    if(Inicio <= cont){
+      cout<<Inicio<<" == "<<cont<<endl;    
       InsertarFinal(cliente);
       }
       cont++;
     }
 }
-
+string lista::BuscarMemoria(int indice,string type){
+  string cliente;
+  string v;
+  int cont = Inicio;
+  pnodo aux = primero;
+  if(Inicio <= indice && Final >= indice){
+    while(cont != indice){
+      aux = aux->siguiente;
+    }
+    cliente = aux->valor;
+    return cliente;
+  }
+  if(type == "Busqueda"){
+    CargarMemoriaBusqueda(indice);
+    cliente = BuscarMemoria(indice,"Busqueda");
+    return cliente;
+  }else{
+    CargarMemoriaInsertar(indice);
+    cliente = BuscarMemoria(indice,"Insertar");
+    return cliente;
+  }
+}
 void Binario::limpiar(){
   raiz = NULL;
 }
@@ -366,7 +387,29 @@ void Binario::BorrarBalanceado(NodoBinario *raiz, int x){
     Borrar(q->Hizq);
   }
 }
-
+string Binario::Buscar(NodoBinario *raiz, int x){
+  string indice;
+  cout << "cedula:  " << raiz->valor << endl;
+  if (raiz != NULL){
+    if (x < raiz->valor){
+      Buscar(raiz->Hizq, x);
+    }
+    else{
+      if (x > raiz->valor){
+        Buscar(raiz->Hder, x);
+      }
+      else{
+        cout<<"Encontrado en arbol!!!"<<endl;
+        cout<<raiz->str<<endl;
+        indice = raiz->str;
+        return indice;
+      }
+    }
+  }
+  else{
+    cout<<"el arbol esta vacio"<<endl;
+  }
+}
 
 void AgregarUno(string cedula){
   string str, str2;
@@ -413,6 +456,7 @@ int main(){
   int opcion;
   CrearIndices();
   Arbol.insertarIndices();
+  Mem.CargarMemoriaBusqueda(1);
   bool seguirTrabajando = true;
   while (seguirTrabajando){
     cout << "Bievenido" << endl;
@@ -420,7 +464,7 @@ int main(){
     cout << "    1. Indexar" << endl;
     cout << "    2. Agregar un cliente" << endl;
     cout << "    3. Eliminar un cliente" << endl;
-    cout << "    4. CargarMemoriaBusqueda" <<endl;
+    cout << "    4. Busqueda" <<endl;
     cout << "    99. Mostrar recorridos" << endl;
     cout << "    100. Salir" << endl;
     cin >> opcion;
@@ -436,9 +480,23 @@ int main(){
       Arbol.indexar();
     }else if(opcion == 4){
       int indice;
+      int v;
+      string prueba;
+      string cliente;
+      cout<<"Introduzca el numero de cedula del cliente: ";
       cin >> indice;
-      Mem.CargarMemoriaInsertar(indice);
-      Mem.Mostrar();
+      cout<<endl;
+      prueba = Arbol.Buscar(Arbol.raiz,indice);
+      cout<<prueba<<endl;
+      v = stoi(Arbol.Buscar(Arbol.raiz,indice));
+      cout<<v<<endl;
+      cliente = Mem.BuscarMemoria(v,"Busqueda");
+      if(cliente == "No Encontrado"){
+        cout<<"El cliente no esta en los archivos"<<endl;
+      }else{
+        cout<<"Se ha encontrado el cliente"<<endl;
+        cout<<"El cliente es : "<<cliente<<endl;
+      }
     }else if(opcion == 99){
       cout << "Inorden: " << endl;
       InordenR(Arbol.raiz);
