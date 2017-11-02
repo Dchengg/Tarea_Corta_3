@@ -316,16 +316,24 @@ int Binario::insertarCliente(){
   string nombre;
   string cedula;
   int v;
+  int indice;
   cout<<"Ingrese el nombre del cliente: ";
   cin>>nombre;
   cout<<endl<<"Ingrese el numero de cedula del cliente :";
   cin>>cedula;
   cout<<endl;
-  cliente = cedula+','+nombre;
-  Archivo<<endl<<cliente;
-  cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
   v = stoi(cedula);
+  indice = Buscar(raiz,v);
+  if(indice == 0){
+    cliente = cedula+','+nombre;
+    Archivo<<endl<<cliente;
+    cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
+  }else{
+    cout<<"El numero "<<v<<" de cedula esta repetido"<<endl;
+    v = 0;
+  }
   return v;
+  
 }
 
 void CrearIndices(){
@@ -416,15 +424,17 @@ int Binario::Buscar(NodoBinario *raiz, int x){
   }
 }
 
-void AgregarUno(string cedula){
-  string str, str2;
+string AgregarUno(string cedula){
+  string str, str2, info;
   ifstream original ( "Clientes.txt" );
   ofstream copia ( "Clientes2.txt" );
   while (!original.eof()){
       getline(original,str);
       str2 = str;
-      if (getSegmento(str,1) == cedula)
+      if (getSegmento(str,1) == cedula){
+        info = str;
         str2 = str + ",1";
+      }
       copia << str2 << endl;
   }
   original.close();
@@ -443,6 +453,7 @@ void AgregarUno(string cedula){
   copia2.close();
   remove("Clientes.txt");
   rename("Clientes2.txt","Clientes.txt");
+  return info;
 }
 
 void Binario::EliminarCliente (int cedula){
@@ -500,10 +511,12 @@ int main(){
       int cedula;
       int indice;
       cedula = Arbol.insertarCliente();
-      Arbol.indexar();
-      indice = Arbol.Buscar(Arbol.raiz,cedula);
-      cout<<indice<<endl;
-      Mem.CargarMemoriaInsertar(indice);
+      if(cedula != 0){
+        Arbol.indexar();
+        indice = Arbol.Buscar(Arbol.raiz,cedula);
+        cout<<indice<<endl;
+        Mem.CargarMemoriaInsertar(indice);
+      }
     }else if(opcion == 3){
       int clienteAEliminar;
       cout << endl << "Digite la cedula del cliente que desea eliminar: ";
