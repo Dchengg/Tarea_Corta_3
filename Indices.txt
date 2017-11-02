@@ -1,7 +1,5 @@
-1,12,Carlos
-2,45,Boi
-3,4,jose
-4,13,lol
-5,9,beast
-6,20,pedro
-7,7,bruh
+1,4,jose
+2,13,lol
+3,9,beast
+4,20,pedro
+5,7,bruh

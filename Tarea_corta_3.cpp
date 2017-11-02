@@ -66,7 +66,7 @@ public:
     void indexar();
     int insertarCliente();
     void limpiar();
-    void EliminarCliente (int cedula);
+    string EliminarCliente (int cedula);
     int Buscar(NodoBinario *raiz, int x);
 
 };
@@ -84,6 +84,8 @@ public:
   void InsertarFinal(string v);
   void BorrarInicio();
   void limpiar();
+  void BorrarMemoria(string cliente);
+
 
 
 protected:
@@ -306,9 +308,26 @@ string lista::BuscarMemoria(int indice,string type){
     return cliente;
   }
 }
+void lista::BorrarMemoria(string cliente){
+  Mostrar();
+  pnodo aux = primero;
+  while(aux != NULL){
+    if(cliente == aux->valor){
+      pnodo temp = primero;
+      while(temp->siguiente != aux){
+        temp = temp->siguiente;
+      }
+      temp->siguiente = aux->siguiente;
+      aux->siguiente = NULL;
+      delete aux;
+    }
+    aux = aux->siguiente;
+  }
+}
 void Binario::limpiar(){
   raiz = NULL;
 }
+
 
 int Binario::insertarCliente(){
   std::ofstream Archivo("Clientes.txt",fstream::app);
@@ -456,10 +475,13 @@ string AgregarUno(string cedula){
   return info;
 }
 
-void Binario::EliminarCliente (int cedula){
+string Binario::EliminarCliente (int cedula){
   //if (<<metodo para buscar cédulas en el arbol>>){
+  string cliente;
   string cedulaString = to_string(cedula);
-  AgregarUno(cedulaString);
+  cliente = AgregarUno(cedulaString);
+  return cliente;
+  
   //}
   //else{
     //cout << "La cédula que digito no existe" << endl;
@@ -519,10 +541,13 @@ int main(){
       }
     }else if(opcion == 3){
       int clienteAEliminar;
+      string cliente;
       cout << endl << "Digite la cedula del cliente que desea eliminar: ";
       cin >> clienteAEliminar;
-      Arbol.EliminarCliente(clienteAEliminar);
+      cliente = Arbol.EliminarCliente(clienteAEliminar);
       Arbol.indexar();
+      Mem.BorrarMemoria(cliente);
+      Mem.Mostrar();
     }else if(opcion == 4){
       int indice;
       int v;
