@@ -85,8 +85,10 @@ public:
   void BorrarInicio();
   void limpiar();
   void BorrarMemoria(string cliente);
-
-
+  void InsertarParaValidar(lista &lista, int pos);
+  void Comparar();
+  void Validar(lista &lista1, lista &lista2);
+  void ReescribirArch();
 
 protected:
 	pnodo primero;
@@ -333,6 +335,86 @@ void lista::BorrarMemoria(string cliente){
     aux = aux->siguiente;
   }
 }
+void lista::InsertarParaValidar(lista &lista, int pos)
+{
+	pnodo aux = lista.primero;
+	do
+	{
+		string str = aux->valor;
+		string segmento;
+		stringstream stream(str);
+		int cont = 0;
+		while (getline(stream, segmento, ','))
+		{
+			if (cont == pos)
+				InsertarFinal(segmento);
+			cont++;
+		}
+		aux = aux->siguiente;
+	} while (aux != NULL);
+}
+
+void lista::Comparar()
+{
+	pnodo aux = primero;
+	pnodo aux2;
+	do {
+		string str;
+		aux2 = aux;
+		str = aux2->valor;
+		while (aux2->siguiente != NULL) {
+			aux2 = aux2->siguiente;
+			if (str == aux2->valor) {
+				aux2->valor = "NO";
+			}
+		}
+		aux = aux->siguiente;
+	} while (aux != NULL);
+}
+
+void lista::Validar(lista &lista1, lista &lista2){
+  pnodo aux = lista1.primero;
+  pnodo aux2 = lista2.primero;
+  while (aux2 != NULL){
+    if (aux->valor == "NO")
+      aux2->valor = "NO";
+    aux = aux->siguiente;
+    aux2 = aux2->siguiente;
+  }
+  aux = lista2.primero;
+  aux2 = lista2.primero;
+  while (aux != NULL){
+    if (aux->siguiente != NULL){
+      if (aux->siguiente->valor == "NO"){
+        aux2 = aux->siguiente;
+        while (aux2->valor == "NO" && aux2->siguiente != NULL){
+          aux2 = aux2->siguiente;
+        }
+        if (aux2->valor == "NO" && aux2->siguiente == NULL){
+          aux->siguiente = NULL;
+        }
+        else
+          aux->siguiente = aux2;
+      }
+    }
+    if (aux != NULL)
+      aux = aux->siguiente;
+  }
+}
+
+void lista::ReescribirArch(){
+  pnodo aux = primero;
+  std::ofstream arch1("Clientes.txt");
+  string str;
+  while (aux != NULL){
+    str = aux->valor;
+    if (aux->siguiente != NULL)
+      arch1 << str << std::endl;
+    else
+      arch1 << str;
+    aux = aux->siguiente;
+  }
+}
 void Binario::limpiar(){
   raiz = NULL;
 }
@@ -538,6 +620,17 @@ void Purgar(){
 }
 
 int main(){
+  lista listaDeClientes, listaDeCedulas, listaInutil;
+  std::ifstream file1("Clientes.txt");
+	std::string str1;
+	while (std::getline(file1, str1)) {
+		listaDeClientes.InsertarFinal(str1);
+	}
+  file1.close();
+  listaDeCedulas.InsertarParaValidar(listaDeClientes,0);
+  listaDeCedulas.Comparar();
+  listaInutil.Validar(listaDeCedulas, listaDeClientes);
+  listaDeClientes.ReescribirArch();
   Binario Arbol;
   lista Mem;
   int opcion;

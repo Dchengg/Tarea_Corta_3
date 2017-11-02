@@ -1,4 +1,4 @@
-4,Diego,1
+4,Diego
 21,boi
 12,varas
-45,amigos,1
+45,amigos

@@ -1,2 +1,4 @@
-1,21,boi
-2,12,varas
+1,4,Diego
+2,21,boi
+3,12,varas
+4,45,amigos
