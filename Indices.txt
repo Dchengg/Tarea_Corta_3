@@ -1,41 +1,9 @@
-1,201709766,Diego Gonzales
-2,117380721,Francisco Velazques
-3,564218784,Lorena Muños
-4,124259485,Veronica Gónzales
-5,526843120,Francisco Pereira
-6,129374948,Xerath OP
-7,102948472,Faker Korean
-8,129847593,ROCK HARD
-9,193048562,BRUH jimenez
-10,492018347,IT will work
-11,101983803,Stupid name
-12,365484132,Tengo Hambre
-13,943151542,Puto el que lo lea
-14,874158792,Quiero jugar lol
-15,962214886,Puta mierda
-16,520489621,Voy a tener que llevar Verano
-17,765156874,Jale a Chepe
-18,876162245,Aerath too OP
-19,451665612,Just kidding
-20,654510346,I actually suck
-21,354688165,No surprice there
-22,256498525,Katarina pls nerf
-23,987512165,EKKO BAN
-24,932165475,Fucking EKKO
-25,562135654,Datos pls nerf
-26,123640248,Ivannia BAN PLOX
-27,461235481,Ya me aburri
-28,612335621,Quiero volver a jugar
-29,125634895,Pues C mamo
-30,524568745,o se C mamut
-31,645462154,C++
-32,132025635,QUIERO CONFITES >:v
-33,343995858,Con anime :3
-34,459818274,Rem BEST WAIFU
-35,356984521,SOFI HIZO MORTAL
-36,220672155,y uno aqui de inutil
-37,455135489,NO BAN PLOX
-38,984546511,Make it stop
-39,688451657,PreordenI
-40,123469815,PORFIN >:v
-41,123345678,WHAt
+1;12;Carlos
+2;45;Boi
+3;4;jose
+4;13;lol
+5;9;beast
+6;54;Diego
+7;91;Final
+8;65;cloud
+9;777;SSSSS54;juanca

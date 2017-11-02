@@ -84,6 +84,14 @@ public:
   void InsertarFinal(string v);
   void BorrarInicio();
   void limpiar();
+  void InsertarParaValidar(lista &lista, int pos);
+  void Comparar();
+  void Validar(lista &lista1, lista &lista2);
+  void ReescribirArch();
+
+
+
+
 
 
 protected:
@@ -147,7 +155,7 @@ void InordenR(NodoBinario *R){
         return;
     }else{
         InordenR(R->Hizq);
-        cout<<R->valor<<","<<R->str<<" - ";
+        cout<<R->valor<<";"<<R->str<<" - ";
         InordenR(R->Hder);
     }
 }
@@ -168,7 +176,7 @@ string getSegmento(string str, int pos){
   int cont = 1;
   stringstream stream(str);
   string resultado;
-  while (getline(stream, segmento, ','))
+  while (getline(stream, segmento, ';'))
   {
     if (cont == pos){
       resultado = segmento;
@@ -304,7 +312,86 @@ string lista::BuscarMemoria(int indice,string type){
 void Binario::limpiar(){
   raiz = NULL;
 }
+void lista::InsertarParaValidar(lista &lista, int pos)
+{
+	pnodo aux = lista.primero;
+	do
+	{
+		string str = aux->valor;
+		string segmento;
+		stringstream stream(str);
+		int cont = 0;
+		while (getline(stream, segmento, ';'))
+		{
+			if (cont == pos)
+				InsertarFinal(segmento);
+			cont++;
+		}
+		aux = aux->siguiente;
+	} while (aux != NULL);
+}
 
+void lista::Comparar()
+{
+	pnodo aux = primero;
+	pnodo aux2;
+	do {
+		string str;
+		aux2 = aux;
+		str = aux2->valor;
+		while (aux2->siguiente != NULL) {
+			aux2 = aux2->siguiente;
+			if (str == aux2->valor) {
+				aux2->valor = "NO";
+			}
+		}
+		aux = aux->siguiente;
+	} while (aux != NULL);
+}
+
+void lista::Validar(lista &lista1, lista &lista2){
+  pnodo aux = lista1.primero;
+  pnodo aux2 = lista2.primero;
+  while (aux2 != NULL){
+    if (aux->valor == "NO")
+      aux2->valor = "NO";
+    aux = aux->siguiente;
+    aux2 = aux2->siguiente;
+  }
+  aux = lista2.primero;
+  aux2 = lista2.primero;
+  while (aux != NULL){
+    if (aux->siguiente != NULL){
+      if (aux->siguiente->valor == "NO"){
+        aux2 = aux->siguiente;
+        while (aux2->valor == "NO" && aux2->siguiente != NULL){
+          aux2 = aux2->siguiente;
+        }
+        if (aux2->valor == "NO" && aux2->siguiente == NULL){
+          aux->siguiente = NULL;
+        }
+        else
+          aux->siguiente = aux2;
+      }
+    }
+    if (aux != NULL)
+      aux = aux->siguiente;
+  }
+}
+
+void lista::ReescribirArch(){
+  pnodo aux = primero;
+  std::ofstream arch1("Clientes.txt");
+  string str;
+  while (aux != NULL){
+    str = aux->valor;
+    if (aux->siguiente != NULL)
+      arch1 << str << std::endl;
+    else
+      arch1 << str;
+    aux = aux->siguiente;
+  }
+}
 void Binario::insertarCliente(){
   std::ofstream Archivo("Clientes.txt",fstream::app);
   string cliente;
@@ -315,7 +402,7 @@ void Binario::insertarCliente(){
   cout<<endl<<"Ingrese el numero de cedula del cliente :";
   cin>>cedula;
   cout<<endl;
-  cliente = cedula+','+nombre;
+  cliente = cedula+';'+nombre;
   Archivo<<cliente <<endl;
   indexar();
   cout<<"El cliente "<<cliente<<" ha sido agregado"<<endl;
@@ -334,7 +421,7 @@ void CrearIndices(){
     if (str.back() != '1'){
       expresion = str;
       cont++;
-      expresion = to_string(cont)+","+expresion;
+      expresion = to_string(cont)+";"+expresion;
       arch1 << expresion << std::endl;
     }
   }
@@ -419,7 +506,7 @@ void AgregarUno(string cedula){
       getline(original,str);
       str2 = str;
       if (getSegmento(str,1) == cedula)
-        str2 = str + ",1";
+        str2 = str + ";1";
       copia << str2 << endl;
   }
   original.close();
@@ -451,6 +538,17 @@ void Binario::EliminarCliente (int cedula){
 }
 
 int main(){
+  lista listaDeClientes, listaDeCedulas, listaInutil;
+  std::ifstream file1("Clientes.txt");
+	std::string str1;
+	while (std::getline(file1, str1)) {
+		listaDeClientes.InsertarFinal(str1);
+	}
+  file1.close();
+  listaDeCedulas.InsertarParaValidar(listaDeClientes,0);
+  listaDeCedulas.Comparar();
+  listaInutil.Validar(listaDeCedulas, listaDeClientes);
+  listaDeClientes.ReescribirArch();
   Binario Arbol;
   lista Mem;
   int opcion;
