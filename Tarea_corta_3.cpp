@@ -398,13 +398,33 @@ void AgregarUno(string cedula){
 }
 
 void Binario::EliminarCliente (int cedula){
-  //if (BorrarBalanceado(raiz,cedula)){
+  //if (<<metodo para buscar cédulas en el arbol>>){
   string cedulaString = to_string(cedula);
   AgregarUno(cedulaString);
   //}
   //else{
     //cout << "La cédula que digito no existe" << endl;
   //}
+}
+
+void Purgar(){
+  std::ofstream borrar("Clientes2.txt");//Para borrar datos residuo
+  std::ofstream arch1("Clientes2.txt",fstream::app);
+  string archivo = "Clientes.txt";
+  string expresion;
+  std::ifstream Archivo(archivo);
+	std::string str;
+  while (std::getline(Archivo, str)) {
+    if (str.back() != '1'){
+      expresion = str;
+      arch1 << expresion << std::endl;
+    }
+  }
+  borrar.close();
+  arch1.close();
+  Archivo.close();
+  remove("Clientes.txt");
+  rename("Clientes2.txt","Clientes.txt");
 }
 
 int main(){
@@ -423,6 +443,7 @@ int main(){
     cout << "    4. CargarMemoriaBusqueda" <<endl;
     cout << "    99. Mostrar recorridos" << endl;
     cout << "    100. Salir" << endl;
+    cout << "    101. Por favor funciona" << endl;
     cin >> opcion;
     if(opcion == 1)
       Arbol.indexar();
@@ -449,6 +470,8 @@ int main(){
     }
     else if(opcion == 100)
       seguirTrabajando = false;
+    else if(opcion == 101)
+      Purgar();
     else
       cout<<"Por favor digite una opcion valida"<<endl;
   }
