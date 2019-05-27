@@ -169,10 +169,10 @@ void PostordenR(NodoBinario *R){
 
 string getSegmento(string str, int pos){
   string segmento;
-  int cont = 1;
+  int cont = 0;
   stringstream stream(str);
   string resultado;
-  while (getline(stream, segmento, ','))
+  while (getline(stream, segmento, ';'))
   {
     if (cont == pos){
       resultado = segmento;
